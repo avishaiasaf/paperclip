@@ -1,0 +1,59 @@
+services:
+  paperclip:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    networks:
+      - internal
+    environment:
+      HOST: "0.0.0.0"
+      PORT: "3100"
+      SERVE_UI: "true"
+      PAPERCLIP_HOME: "/paperclip"
+      PAPERCLIP_DEPLOYMENT_MODE: "${PAPERCLIP_DEPLOYMENT_MODE:-authenticated}"
+      PAPERCLIP_DEPLOYMENT_EXPOSURE: "${PAPERCLIP_DEPLOYMENT_EXPOSURE:-private}"
+      PAPERCLIP_PUBLIC_URL: "${PAPERCLIP_PUBLIC_URL:?PAPERCLIP_PUBLIC_URL must be set}"
+      BETTER_AUTH_SECRET: "${BETTER_AUTH_SECRET:?BETTER_AUTH_SECRET must be set}"
+      BETTER_AUTH_TRUSTED_ORIGINS: "${BETTER_AUTH_TRUSTED_ORIGINS:-}"
+      PAPERCLIP_ALLOWED_HOSTNAMES: "${PAPERCLIP_ALLOWED_HOSTNAMES:-}"
+      PAPERCLIP_AUTH_DISABLE_SIGN_UP: "${PAPERCLIP_AUTH_DISABLE_SIGN_UP:-false}"
+      OPENAI_API_KEY: "${OPENAI_API_KEY:-}"
+      ANTHROPIC_API_KEY: "${ANTHROPIC_API_KEY:-}"
+      PAPERCLIP_MIGRATION_AUTO_APPLY: "true"
+      PAPERCLIP_DB_BACKUP_ENABLED: "${PAPERCLIP_DB_BACKUP_ENABLED:-true}"
+      PAPERCLIP_DB_BACKUP_INTERVAL_MINUTES: "${PAPERCLIP_DB_BACKUP_INTERVAL_MINUTES:-60}"
+      PAPERCLIP_DB_BACKUP_RETENTION_DAYS: "${PAPERCLIP_DB_BACKUP_RETENTION_DAYS:-30}"
+      HEARTBEAT_SCHEDULER_ENABLED: "${HEARTBEAT_SCHEDULER_ENABLED:-true}"
+    volumes:
+      - "${PAPERCLIP_DATA_DIR:-./data/paperclip}:/paperclip"
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:3100/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    networks:
+      - internal
+    ports:
+      - "${TAILSCALE_IP:?TAILSCALE_IP must be set}:80:80"
+      - "${TAILSCALE_IP}:443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      paperclip:
+        condition: service_healthy
+
+networks:
+  internal:
+    driver: bridge
+
+volumes:
+  caddy_data:
+  caddy_config:

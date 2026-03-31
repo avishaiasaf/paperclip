@@ -194,6 +194,147 @@ This starts the API server at `http://localhost:3100`. An embedded PostgreSQL da
 
 <br/>
 
+## Server Deployment (Docker + Tailscale)
+
+Deploy Paperclip on a Linux server with Docker. Caddy reverse-proxies traffic, and Tailscale ensures only your devices can access it — nothing is exposed to the public internet.
+
+### Prerequisites
+
+A Debian 12+ (Bookworm) server with root/sudo access. No domain required.
+
+### 1. Update the system
+
+```bash
+sudo apt update && sudo apt upgrade -y
+sudo apt install -y curl git
+```
+
+### 2. Install Docker
+
+```bash
+# Add Docker's official GPG key
+sudo install -m 0755 -d /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+sudo chmod a+r /etc/apt/keyrings/docker.gpg
+
+# Add the Docker repository
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian \
+  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+# Install Docker Engine + Compose plugin
+sudo apt update
+sudo apt install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+
+# Allow your user to run Docker without sudo
+sudo usermod -aG docker $USER
+newgrp docker
+
+# Enable Docker to start on boot
+sudo systemctl enable docker
+```
+
+### 3. Install Tailscale
+
+```bash
+curl -fsSL https://tailscale.com/install.sh | sh
+sudo tailscale up
+```
+
+Follow the authentication URL printed to the terminal. Then note your Tailscale IP:
+
+```bash
+tailscale ip -4
+# Example output: 100.64.0.5
+```
+
+### 4. Clone and configure
+
+```bash
+git clone https://github.com/paperclipai/paperclip.git
+cd paperclip
+cp .env.example .env
+```
+
+Edit `.env` and set the required values:
+
+```bash
+# Set your Tailscale IP
+TAILSCALE_IP=100.64.0.5
+
+# Generate an auth secret
+BETTER_AUTH_SECRET=$(openssl rand -base64 32)
+
+# Set the public URL (use your Tailscale IP or MagicDNS hostname)
+PAPERCLIP_PUBLIC_URL=http://100.64.0.5
+
+# Add at least one LLM API key
+ANTHROPIC_API_KEY=sk-ant-...
+# OPENAI_API_KEY=sk-...
+```
+
+Prepare the data directory (the container runs as uid 1000):
+
+```bash
+mkdir -p data/paperclip
+sudo chown 1000:1000 data/paperclip
+```
+
+### 5. Build and start
+
+```bash
+docker compose -f docker-compose.production.yml build
+docker compose -f docker-compose.production.yml up -d
+```
+
+### 6. Verify
+
+```bash
+# Check container status
+docker compose -f docker-compose.production.yml ps
+
+# Check logs (first boot takes ~60s for embedded PostgreSQL initialization)
+docker compose -f docker-compose.production.yml logs -f paperclip
+
+# From another device on your Tailnet
+curl http://100.64.0.5/api/health
+# Expected: {"status":"ok"}
+```
+
+Open `http://<TAILSCALE_IP>` in your browser. The first user to sign up becomes the instance admin.
+
+> **Tip:** After creating your account, set `PAPERCLIP_AUTH_DISABLE_SIGN_UP=true` in `.env` and restart to prevent unauthorized sign-ups.
+
+### 7. Maintenance
+
+```bash
+# View logs
+docker compose -f docker-compose.production.yml logs -f
+
+# Update to latest version
+git pull
+docker compose -f docker-compose.production.yml build
+docker compose -f docker-compose.production.yml up -d
+
+# Restart
+docker compose -f docker-compose.production.yml restart
+```
+
+Data (database, config, backups) persists in `./data/paperclip`. Automated database backups run hourly by default (configurable in `.env`).
+
+### Troubleshooting
+
+| Issue | Fix |
+|-------|-----|
+| Health check failing | First boot takes ~60s. Check logs: `docker compose -f docker-compose.production.yml logs paperclip` |
+| Auth redirect errors | Ensure `PAPERCLIP_PUBLIC_URL` matches the URL in your browser |
+| Can't access from other devices | Verify both devices are on the same Tailscale network |
+| Accessing via multiple hostnames | Set `PAPERCLIP_ALLOWED_HOSTNAMES=hostname1,hostname2` in `.env` |
+| Port 80/443 already in use | Stop any existing web server, or check `TAILSCALE_IP` is correct |
+
+<br/>
+
 ## FAQ
 
 **What does a typical setup look like?**
