@@ -41,7 +41,6 @@ services:
       - internal
     ports:
       - "${TAILSCALE_IP:?TAILSCALE_IP must be set}:80:80"
-      - "${TAILSCALE_IP}:443:443"
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy_data:/data

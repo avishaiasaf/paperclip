@@ -182,7 +182,7 @@ If you already have Paperclip configured, rerunning `onboard` keeps the existing
 Or manually:
 
 ```bash
-git clone https://github.com/paperclipai/paperclip.git
+git clone https://github.com/avishaiasaf/paperclip.git
 cd paperclip
 pnpm install
 pnpm dev
@@ -239,7 +239,7 @@ sudo systemctl enable docker
 
 ```bash
 curl -fsSL https://tailscale.com/install.sh | sh
-sudo tailscale up
+sudo tailscale up --ssh
 ```
 
 Follow the authentication URL printed to the terminal. Then note your Tailscale IP:
@@ -252,7 +252,7 @@ tailscale ip -4
 ### 4. Clone and configure
 
 ```bash
-git clone https://github.com/paperclipai/paperclip.git
+git clone https://github.com/avishaiasaf/paperclip.git
 cd paperclip
 cp .env.example .env
 ```
