@@ -302,11 +302,27 @@ curl http://100.64.0.5/api/health
 # Expected: {"status":"ok"}
 ```
 
-Open `http://<TAILSCALE_IP>` in your browser. The first user to sign up becomes the instance admin.
+### 7. Initial setup
+
+Run CLI commands inside the container with this prefix:
+
+```bash
+docker compose -f docker-compose.production.yml exec paperclip \
+  node --import ./server/node_modules/tsx/dist/loader.mjs cli/src/index.ts <command>
+```
+
+First, create the initial config:
+
+```bash
+docker compose -f docker-compose.production.yml exec paperclip \
+  node --import ./server/node_modules/tsx/dist/loader.mjs cli/src/index.ts onboard --yes
+```
+
+Then open `http://<TAILSCALE_IP>` in your browser (make sure to use `http://`, not `https://`). Sign up to create the first admin account.
 
 > **Tip:** After creating your account, set `PAPERCLIP_AUTH_DISABLE_SIGN_UP=true` in `.env` and restart to prevent unauthorized sign-ups.
 
-### 7. Maintenance
+### 8. Maintenance
 
 ```bash
 # View logs
@@ -328,10 +344,13 @@ Data (database, config, backups) persists in `./data/paperclip`. Automated datab
 | Issue | Fix |
 |-------|-----|
 | Health check failing | First boot takes ~60s. Check logs: `docker compose -f docker-compose.production.yml logs paperclip` |
-| Auth redirect errors | Ensure `PAPERCLIP_PUBLIC_URL` matches the URL in your browser |
+| `ERR_SSL_PROTOCOL_ERROR` | Your browser is trying HTTPS. Use `http://` explicitly — there is no TLS (Tailscale encrypts traffic via WireGuard) |
+| `ERR_CONNECTION_REFUSED` but `curl` works | Chrome cached an HTTPS redirect. Go to `chrome://net-internals/#hsts`, delete `<your-tailscale-ip>` under "Delete domain security policies", then retry with `http://`. Or use an incognito window |
+| Auth redirect errors | Ensure `PAPERCLIP_PUBLIC_URL` matches the URL in your browser (including `http://` not `https://`) |
 | Can't access from other devices | Verify both devices are on the same Tailscale network |
 | Accessing via multiple hostnames | Set `PAPERCLIP_ALLOWED_HOSTNAMES=hostname1,hostname2` in `.env` |
-| Port 80/443 already in use | Stop any existing web server, or check `TAILSCALE_IP` is correct |
+| Port 80 already in use | Stop any existing web server, or check `TAILSCALE_IP` is correct |
+| CLI errors on host machine | Don't run `pnpm paperclipai` on the host — use `docker compose exec` as shown in step 7 |
 
 <br/>
 
