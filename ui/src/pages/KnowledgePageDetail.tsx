@@ -6,7 +6,7 @@ import { useCompany } from "../context/CompanyContext";
 import { useBreadcrumbs } from "../context/BreadcrumbContext";
 import { queryKeys } from "../lib/queryKeys";
 import { PageSkeleton } from "../components/PageSkeleton";
-import { MarkdownEditor } from "../components/MarkdownEditor";
+import { KnowledgeEditor } from "../components/knowledge-editor/KnowledgeEditor";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -140,8 +140,8 @@ export function KnowledgePageDetail() {
         </TabsList>
 
         <TabsContent value="edit" className="mt-4">
-          <div className="min-h-[400px] rounded-lg border border-border p-4">
-            <MarkdownEditor
+          <div className="min-h-[400px]">
+            <KnowledgeEditor
               value={body}
               onChange={handleBodyChange}
             />

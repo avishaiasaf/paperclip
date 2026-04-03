@@ -5,7 +5,22 @@
       "Bash(curl -s -X PATCH http://localhost:3100/api/knowledge/__TRACKED_VAR__ -H 'Content-Type: application/json' -d '{\"body\":\"# Welcome\\\\n\\\\nUpdated content.\",\"changeSummary\":\"Updated body\"}')",
       "Bash(python3 -c \"import json,sys; data=json.load\\(sys.stdin\\); print\\(f'{len\\(data\\)} revisions:'\\); [print\\(f'  v{r[\\\\\"revisionNumber\\\\\"]}: {r[\\\\\"changeSummary\\\\\"]}'\\) for r in data]\")",
       "Bash(curl -s http://localhost:3100/)",
-      "Bash(pkill -f \"tsx.*dev-runner\")"
+      "Bash(pkill -f \"tsx.*dev-runner\")",
+      "Read(//private/tmp/cabinet-ref/src/components/editor/**)",
+      "Read(//tmp/cabinet-ref/src/components/editor/**)",
+      "Read(//tmp/cabinet-ref/src/lib/markdown/**)",
+      "Read(//private/tmp/cabinet-ref/src/lib/markdown/**)",
+      "Read(//tmp/cabinet-ref/**)",
+      "Read(//private/tmp/cabinet-ref/**)",
+      "Bash(pnpm --filter @paperclipai/ui add @tiptap/react @tiptap/starter-kit @tiptap/pm @tiptap/extension-placeholder @tiptap/extension-image @tiptap/extension-table @tiptap/extension-table-row @tiptap/extension-table-cell @tiptap/extension-table-header @tiptap/extension-task-list @tiptap/extension-task-item @tiptap/extension-code-block-lowlight lowlight turndown turndown-plugin-gfm unified remark-parse remark-gfm remark-rehype rehype-stringify)",
+      "Bash(pnpm --filter @paperclipai/ui add -D @types/turndown)",
+      "Bash(cp /tmp/cabinet-ref/src/components/editor/wiki-link-extension.ts /Users/avishaiasaf/Desktop/Paperclip/paperclip/ui/src/components/knowledge-editor/)",
+      "Bash(cp /tmp/cabinet-ref/src/components/editor/callout-extension.ts /Users/avishaiasaf/Desktop/Paperclip/paperclip/ui/src/components/knowledge-editor/)",
+      "Bash(cp /tmp/cabinet-ref/src/components/editor/extensions.ts /Users/avishaiasaf/Desktop/Paperclip/paperclip/ui/src/components/knowledge-editor/)"
+    ],
+    "additionalDirectories": [
+      "/Users/avishaiasaf/Desktop/Paperclip/paperclip/ui/src/components",
+      "/private/tmp/cabinet-ref/src/components/editor"
     ]
   }
 }
