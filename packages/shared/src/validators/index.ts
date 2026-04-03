@@ -174,6 +174,20 @@ export {
 } from "./goal.js";
 
 export {
+  createKnowledgePageSchema,
+  updateKnowledgePageSchema,
+  type CreateKnowledgePage,
+  type UpdateKnowledgePage,
+} from "./knowledge.js";
+
+export {
+  createAgentTemplateSchema,
+  updateAgentTemplateSchema,
+  type CreateAgentTemplate,
+  type UpdateAgentTemplate,
+} from "./agent-template.js";
+
+export {
   createApprovalSchema,
   resolveApprovalSchema,
   requestApprovalRevisionSchema,

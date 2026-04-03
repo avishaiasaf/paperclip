@@ -55,6 +55,9 @@ It looks like a task manager — but under the hood it has org charts, budgets, 
     <td align="center"><img src="doc/assets/logos/claude.svg" width="32" alt="Claude" /><br/><sub>Claude Code</sub></td>
     <td align="center"><img src="doc/assets/logos/codex.svg" width="32" alt="Codex" /><br/><sub>Codex</sub></td>
     <td align="center"><img src="doc/assets/logos/cursor.svg" width="32" alt="Cursor" /><br/><sub>Cursor</sub></td>
+    <td align="center"><img src="doc/assets/logos/gemini.svg" width="32" alt="Gemini" /><br/><sub>Gemini</sub></td>
+    <td align="center"><img src="doc/assets/logos/pi.svg" width="32" alt="Pi" /><br/><sub>Pi</sub></td>
+    <td align="center"><img src="doc/assets/logos/opencode.svg" width="32" alt="OpenCode" /><br/><sub>OpenCode</sub></td>
     <td align="center"><img src="doc/assets/logos/bash.svg" width="32" alt="Bash" /><br/><sub>Bash</sub></td>
     <td align="center"><img src="doc/assets/logos/http.svg" width="32" alt="HTTP" /><br/><sub>HTTP</sub></td>
   </tr>
@@ -121,6 +124,20 @@ Hierarchies, roles, reporting lines. Your agents have a boss, a title, and a job
 <td align="center">
 <h3>📱 Mobile Ready</h3>
 Monitor and manage your autonomous businesses from anywhere.
+</td>
+</tr>
+<tr>
+<td align="center">
+<h3>📚 Knowledge Base</h3>
+Company-scoped wiki with revision history, wiki-links, backlinks, and full-text search. Shared context for agents and humans.
+</td>
+<td align="center">
+<h3>💬 Telegram & Slack</h3>
+Get notifications, approve work, and create tasks from Telegram or Slack. Agents can message your team proactively.
+</td>
+<td align="center">
+<h3>🖥️ Live Terminal</h3>
+Watch agents work in real-time. Stream terminal output from any adapter directly in the dashboard.
 </td>
 </tr>
 </table>
@@ -283,6 +300,8 @@ sudo chown 1000:1000 data/paperclip
 
 ### 5. Build and start
 
+The Docker image comes with all agent CLIs pre-installed: Claude Code, Codex, Cursor, Gemini, Pi, and OpenCode. GitHub CLI (`gh`) is also included so agents can create PRs, manage repos, and deliver code. Every adapter is ready to use out of the box.
+
 ```bash
 docker compose -f docker-compose.production.yml build
 docker compose -f docker-compose.production.yml up -d
@@ -319,6 +338,15 @@ docker compose -f docker-compose.production.yml exec paperclip \
 ```
 
 Then open `http://<TAILSCALE_IP>` in your browser (make sure to use `http://`, not `https://`). Sign up to create the first admin account.
+
+To connect GitHub so agents can create PRs and push code:
+
+```bash
+docker compose -f docker-compose.production.yml exec paperclip \
+  gh auth login --with-token <<< "ghp_YOUR_PERSONAL_ACCESS_TOKEN"
+```
+
+Or use `gh auth login` interactively for device flow authentication.
 
 > **Tip:** After creating your account, set `PAPERCLIP_AUTH_DISABLE_SIGN_UP=true` in `.env` and restart to prevent unauthorized sign-ups.
 
@@ -403,13 +431,18 @@ See [doc/DEVELOPING.md](doc/DEVELOPING.md) for the full development guide.
 - ✅ Skills Manager
 - ✅ Scheduled Routines
 - ✅ Better Budgeting
+- ✅ Knowledge Base — company-scoped wiki with revision history and wiki-links
+- ✅ All adapter CLIs pre-installed in Docker (Claude, Codex, Cursor, Gemini, Pi, OpenCode)
+- ⚪ Telegram & Slack integration (plugin-based)
+- ⚪ Agent Templates Library
+- ⚪ Mission Control / Kanban
+- ⚪ Live Agent Terminal
 - ⚪ Artifacts & Deployments
 - ⚪ CEO Chat
 - ⚪ MAXIMIZER MODE
 - ⚪ Multiple Human Users
 - ⚪ Cloud / Sandbox agents (e.g. Cursor / e2b agents)
 - ⚪ Cloud deployments
-- ⚪ Desktop App
 
 <br/>
 

@@ -225,6 +225,12 @@ export type {
   IssueAttachment,
   IssueLabel,
   Goal,
+  KnowledgePage,
+  KnowledgePageSummary,
+  KnowledgePageRevision,
+  KnowledgePageLink,
+  AgentTemplate,
+  AgentTemplateDepartment,
   Approval,
   ApprovalComment,
   BudgetPolicy,
@@ -422,6 +428,14 @@ export {
   updateGoalSchema,
   type CreateGoal,
   type UpdateGoal,
+  createKnowledgePageSchema,
+  updateKnowledgePageSchema,
+  type CreateKnowledgePage,
+  type UpdateKnowledgePage,
+  createAgentTemplateSchema,
+  updateAgentTemplateSchema,
+  type CreateAgentTemplate,
+  type UpdateAgentTemplate,
   createApprovalSchema,
   upsertBudgetPolicySchema,
   resolveBudgetIncidentSchema,
@@ -599,3 +613,5 @@ export {
   type SecretsLocalEncryptedConfig,
   type ConfigMeta,
 } from "./config-schema.js";
+
+export { AGENT_TEMPLATE_DEPARTMENTS } from "./types/agent-template.js";

@@ -97,6 +97,8 @@ export type {
   IssueLabel,
 } from "./issue.js";
 export type { Goal } from "./goal.js";
+export type { KnowledgePage, KnowledgePageSummary, KnowledgePageRevision, KnowledgePageLink } from "./knowledge.js";
+export { AGENT_TEMPLATE_DEPARTMENTS, type AgentTemplate, type AgentTemplateDepartment } from "./agent-template.js";
 export type { Approval, ApprovalComment } from "./approval.js";
 export type {
   BudgetPolicy,

@@ -29,4 +29,6 @@ export { logActivity, type LogActivityInput } from "./activity-log.js";
 export { notifyHireApproved, type NotifyHireApprovedInput } from "./hire-hook.js";
 export { publishLiveEvent, subscribeCompanyLiveEvents } from "./live-events.js";
 export { reconcilePersistedRuntimeServicesOnStartup, restartDesiredRuntimeServicesOnStartup } from "./workspace-runtime.js";
+export { knowledgeService } from "./knowledge.js";
+export { agentTemplateService } from "./agent-templates.js";
 export { createStorageServiceFromConfig, getStorageService } from "../storage/index.js";

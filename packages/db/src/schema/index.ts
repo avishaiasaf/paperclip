@@ -56,3 +56,7 @@ export { pluginEntities } from "./plugin_entities.js";
 export { pluginJobs, pluginJobRuns } from "./plugin_jobs.js";
 export { pluginWebhookDeliveries } from "./plugin_webhooks.js";
 export { pluginLogs } from "./plugin_logs.js";
+export { agentTemplates } from "./agent_templates.js";
+export { knowledgePages } from "./knowledge_pages.js";
+export { knowledgePageRevisions } from "./knowledge_page_revisions.js";
+export { knowledgePageLinks } from "./knowledge_page_links.js";
