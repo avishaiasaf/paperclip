@@ -94,6 +94,29 @@ function cursorSkillsHome(): string {
   return path.join(os.homedir(), ".cursor", "skills");
 }
 
+async function ensureCursorAgentCommandResolvable(
+  command: string,
+  cwd: string,
+  runtimeEnv: NodeJS.ProcessEnv,
+) {
+  try {
+    await ensureCommandResolvable(command, cwd, runtimeEnv);
+  } catch (err) {
+    if (command !== "agent") throw err;
+    if (!(err instanceof Error)) throw err;
+    const { message } = err;
+    if (
+      !message.startsWith("Command not found in PATH:") &&
+      !message.startsWith("Command is not executable:")
+    ) {
+      throw err;
+    }
+    throw new Error(
+      `${message} Cursor Agent CLI: install it so the Paperclip server process can spawn it, put its directory on PATH for that process (for example in Docker or systemd), or set adapter config "command" to the full path to the agent binary.`,
+    );
+  }
+}
+
 type EnsureCursorSkillsInjectedOptions = {
   skillsDir?: string | null;
   skillsEntries?: Array<{ key: string; runtimeName: string; source: string }>;
@@ -271,7 +294,7 @@ export async function execute(ctx: AdapterExecutionContext): Promise<AdapterExec
   );
   const billingType = resolveCursorBillingType(effectiveEnv);
   const runtimeEnv = ensurePathInEnv(effectiveEnv);
-  await ensureCommandResolvable(command, cwd, runtimeEnv);
+  await ensureCursorAgentCommandResolvable(command, cwd, runtimeEnv);
   const resolvedCommand = await resolveCommandForLogs(command, cwd, runtimeEnv);
   const loggedEnv = buildInvocationEnvForLogs(env, {
     runtimeEnv,

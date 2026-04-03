@@ -259,4 +259,56 @@ describe("cursor execute", () => {
       await fs.rm(root, { recursive: true, force: true });
     }
   });
+
+  it("rejects with Cursor CLI hint when default agent command is not on PATH", async () => {
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-cursor-execute-missing-agent-"));
+    const workspace = path.join(root, "workspace");
+    await fs.mkdir(workspace, { recursive: true });
+
+    const previousHome = process.env.HOME;
+    const previousPath = process.env.PATH;
+    process.env.HOME = root;
+    process.env.PATH = root;
+
+    try {
+      await expect(
+        execute({
+          runId: "run-missing-agent",
+          agent: {
+            id: "agent-1",
+            companyId: "company-1",
+            name: "Cursor Coder",
+            adapterType: "cursor",
+            adapterConfig: {},
+          },
+          runtime: {
+            sessionId: null,
+            sessionParams: null,
+            sessionDisplayId: null,
+            taskKey: null,
+          },
+          config: {
+            cwd: workspace,
+            model: "auto",
+            promptTemplate: "test",
+          },
+          context: {},
+          authToken: null,
+          onLog: async () => {},
+        }),
+      ).rejects.toThrow(/Cursor Agent CLI/);
+    } finally {
+      if (previousHome === undefined) {
+        delete process.env.HOME;
+      } else {
+        process.env.HOME = previousHome;
+      }
+      if (previousPath === undefined) {
+        delete process.env.PATH;
+      } else {
+        process.env.PATH = previousPath;
+      }
+      await fs.rm(root, { recursive: true, force: true });
+    }
+  });
 });

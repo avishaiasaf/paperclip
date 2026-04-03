@@ -1335,17 +1335,19 @@ export function heartbeatService(db: Db) {
     const cwd = resolveDefaultAgentWorkspaceDir(agent.id);
     await fs.mkdir(cwd, { recursive: true });
     const warnings: string[] = [];
+    const agentHomeWorkspaceHint =
+      " Link the issue to a project whose workspace has a local cwd to use that directory instead.";
     if (sessionCwd) {
       warnings.push(
-        `Saved session workspace "${sessionCwd}" is not available. Using fallback workspace "${cwd}" for this run.`,
+        `Saved session workspace "${sessionCwd}" is not available. Using fallback workspace "${cwd}" for this run.${agentHomeWorkspaceHint}`,
       );
     } else if (resolvedProjectId) {
       warnings.push(
-        `No project workspace directory is currently available for this issue. Using fallback workspace "${cwd}" for this run.`,
+        `No project workspace directory is currently available for this issue. Using fallback workspace "${cwd}" for this run.${agentHomeWorkspaceHint}`,
       );
     } else {
       warnings.push(
-        `No project or prior session workspace was available. Using fallback workspace "${cwd}" for this run.`,
+        `No project or prior session workspace was available. Using fallback workspace "${cwd}" for this run.${agentHomeWorkspaceHint}`,
       );
     }
     return {
