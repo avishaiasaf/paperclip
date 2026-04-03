@@ -656,6 +656,9 @@ importers:
       '@tanstack/react-query':
         specifier: ^5.90.21
         version: 5.90.21(react@19.2.4)
+      '@tiptap/core':
+        specifier: ^3.22.1
+        version: 3.22.1(@tiptap/pm@3.22.1)
       '@tiptap/extension-code-block-lowlight':
         specifier: ^3.22.1
         version: 3.22.1(@tiptap/core@3.22.1(@tiptap/pm@3.22.1))(@tiptap/extension-code-block@3.22.1(@tiptap/core@3.22.1(@tiptap/pm@3.22.1))(@tiptap/pm@3.22.1))(@tiptap/pm@3.22.1)(highlight.js@11.11.1)(lowlight@3.3.0)

@@ -22,6 +22,8 @@ export const editorExtensions = [
   }),
   CodeBlockLowlight.configure({
     lowlight,
+    exitOnTripleEnter: true,
+    exitOnArrowDown: true,
     HTMLAttributes: {
       class: "rounded-md bg-muted p-4 font-mono text-sm",
     },

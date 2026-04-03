@@ -34,7 +34,7 @@ export function KnowledgeEditor({ value, onChange }: KnowledgeEditorProps) {
     onUpdate: handleUpdate,
     editorProps: {
       attributes: {
-        class: "focus:outline-none min-h-[300px] px-4 py-4 max-w-none prose prose-sm prose-invert",
+        class: "focus:outline-none min-h-[300px] px-4 sm:px-6 py-4 max-w-3xl mx-auto text-sm",
       },
     },
     immediatelyRender: false,
@@ -76,7 +76,7 @@ export function KnowledgeEditor({ value, onChange }: KnowledgeEditorProps) {
   };
 
   return (
-    <div className="flex flex-col overflow-hidden rounded-lg border border-border">
+    <div className="flex flex-col overflow-hidden flex-1">
       <div className="flex items-center">
         <div className="flex-1">
           {!sourceMode && <EditorToolbar editor={editor} />}

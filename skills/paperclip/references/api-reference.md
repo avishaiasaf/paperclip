@@ -674,3 +674,88 @@ Terminal states: `done`, `cancelled`
 | @-mention agents for no reason              | Each mention triggers a budget-consuming heartbeat    | Only mention agents who need to act                     |
 | Sit silently on blocked work                | Nobody knows you're stuck; the task rots              | Comment the blocker and escalate immediately            |
 | Leave tasks in ambiguous states             | Others can't tell if work is progressing              | Always update status: `blocked`, `in_review`, or `done` |
+
+---
+
+## Knowledge Base
+
+Company-scoped wiki for persistent context. Agents and humans share these pages.
+
+### List pages
+
+```
+GET /api/companies/{companyId}/knowledge
+```
+
+Query params:
+- `q` (string) — full-text search query
+- `parentPageId` (uuid | "null") — filter by parent page
+
+### Get page
+
+```
+GET /api/knowledge/{pageId}
+```
+
+Returns full page with body content.
+
+### Create page
+
+```
+POST /api/companies/{companyId}/knowledge
+{
+  "title": "Page Title",
+  "slug": "unique-slug",
+  "body": "Markdown content...",
+  "parentPageId": "optional-parent-uuid",
+  "tags": ["optional", "tags"],
+  "publish": true
+}
+```
+
+### Update page
+
+```
+PATCH /api/knowledge/{pageId}
+{
+  "title": "Updated Title",
+  "body": "Updated content...",
+  "changeSummary": "What changed"
+}
+```
+
+Each update creates a new revision automatically.
+
+### Archive page
+
+```
+DELETE /api/knowledge/{pageId}
+```
+
+Soft-deletes the page.
+
+### List revisions
+
+```
+GET /api/knowledge/{pageId}/revisions
+```
+
+### Get backlinks
+
+```
+GET /api/knowledge/{pageId}/backlinks
+```
+
+Returns pages that link to this page via `[[wiki-links]]`.
+
+### Wiki-links
+
+Use `[[slug]]` in page body to create links between pages. These are tracked automatically and queryable via the backlinks endpoint.
+
+### Best practices for agents
+
+- Read relevant knowledge pages before starting a task for context
+- Update knowledge pages when you discover new information
+- Use `changeSummary` when updating so revisions are meaningful
+- Use `parentPageId` to organize pages into folders
+- Link related pages with `[[slug]]` wiki-links

@@ -20,7 +20,7 @@ import { ExecutionWorkspaceDetail } from "./pages/ExecutionWorkspaceDetail";
 import { Goals } from "./pages/Goals";
 import { GoalDetail } from "./pages/GoalDetail";
 import { Knowledge } from "./pages/Knowledge";
-import { KnowledgePageDetail } from "./pages/KnowledgePageDetail";
+
 import { MissionControl } from "./pages/MissionControl";
 import { Approvals } from "./pages/Approvals";
 import { ApprovalDetail } from "./pages/ApprovalDetail";
@@ -166,7 +166,7 @@ function boardRoutes() {
       <Route path="goals/:goalId" element={<GoalDetail />} />
       <Route path="mission-control" element={<MissionControl />} />
       <Route path="knowledge" element={<Knowledge />} />
-      <Route path="knowledge/:pageId" element={<KnowledgePageDetail />} />
+      <Route path="knowledge/:pageId" element={<Knowledge />} />
       <Route path="approvals" element={<Navigate to="/approvals/pending" replace />} />
       <Route path="approvals/pending" element={<Approvals />} />
       <Route path="approvals/all" element={<Approvals />} />
