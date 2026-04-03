@@ -51,6 +51,10 @@ RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg \
       @google/gemini-cli@latest \
       @mariozechner/pi-coding-agent@latest \
   && curl -fsSL https://cursor.com/install | bash \
+  && AGENT_PATH="/root/.local/bin/agent" \
+  && test -e "$AGENT_PATH" \
+  && REAL_AGENT="$(readlink -f "$AGENT_PATH")" \
+  && install -m 755 "$REAL_AGENT" /usr/local/bin/agent \
   && mkdir -p /paperclip \
   && chown node:node /paperclip
 
